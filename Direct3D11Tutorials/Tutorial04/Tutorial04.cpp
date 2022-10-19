@@ -399,10 +399,10 @@ HRESULT InitDevice()
     // Create vertex buffer
     SimpleVertex vertices[] =
     {
-        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) }, // 0
-        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) }, // 1
-        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) }, // 2
-        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) }, // 3
+        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) }, // 0 top left
+        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) }, // 1 top right
+        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) }, // 2 top right
+        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) }, // 3 top left
         { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) }, // 4
         { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) }, // 5
         { XMFLOAT3( 1.0f, -1.0f, 1.0f ), XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f ) }, // 6
@@ -428,10 +428,10 @@ HRESULT InitDevice()
     // Create index buffer
     WORD indices[] =
     {
-        5, 4, 0, 1,
-        5, 1, 2, 6,
-        4, 0, 3, 7,
-        6, 7, 3, 2,
+        0, 1, 4, 5,
+        7, 6, 3, 2,
+        5, 1, 3, 4, 0,
+
         /*3,1,0,
         2,1,3,
 
@@ -463,7 +463,7 @@ HRESULT InitDevice()
     g_pImmediateContext->IASetIndexBuffer( g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0 );
 
     // Set primitive topology
-    g_pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_LINELIST );
+    g_pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 
 	// Create the constant buffer
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -580,7 +580,7 @@ void Render()
     //
     // Animate the cube
     //
-	g_World = XMMatrixRotationY( t );
+	g_World = XMMatrixRotationY( t * 0.2f );
 
     //
     // Clear the back buffer
@@ -599,10 +599,10 @@ void Render()
     //
     // Renders a triangle
     //
-	g_pImmediateContext->VSSetShader( g_pVertexShader, nullptr, 0 );
+    g_pImmediateContext->VSSetShader( g_pVertexShader, nullptr, 0 );
 	g_pImmediateContext->VSSetConstantBuffers( 0, 1, &g_pConstantBuffer );
 	g_pImmediateContext->PSSetShader( g_pPixelShader, nullptr, 0 );
-	g_pImmediateContext->DrawIndexed( 36, 0, 0 );        // 36 vertices needed for 12 triangles in a triangle list
+	g_pImmediateContext->DrawIndexed( 13, 0, 0 );        // 36 vertices needed for 12 triangles in a triangle list
 
     //
     // Present our back buffer to our front buffer
